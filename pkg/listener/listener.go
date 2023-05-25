@@ -77,7 +77,8 @@ func (l *StatsDUDPListener) HandlePacket(packet []byte) {
 		if l.Relay != nil && len(line) > 0 {
 			l.Relay.RelayLine(line)
 		}
-		l.EventHandler.Queue(l.LineParser.LineToEvents(line, l.SampleErrors, l.SamplesReceived, l.TagErrors, l.TagsReceived, l.Logger))
+		events := l.LineParser.LineToEvents(line, l.SampleErrors, l.SamplesReceived, l.TagErrors, l.TagsReceived, l.Logger)
+		l.EventHandler.Queue(events)
 	}
 }
 

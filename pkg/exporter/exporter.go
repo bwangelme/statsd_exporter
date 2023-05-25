@@ -112,7 +112,6 @@ func (b *Exporter) handleEvent(thisEvent event.Event) {
 		b.EventsUnmapped.Inc()
 		metricName = mapper.EscapeMetricName(thisEvent.MetricName())
 	}
-
 	switch ev := thisEvent.(type) {
 	case *event.CounterEvent:
 		// We don't accept negative values for counters. Incrementing the counter with a negative number

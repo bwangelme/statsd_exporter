@@ -46,6 +46,8 @@ type MetricMapping struct {
 // UnmarshalYAML is a custom unmarshal function to allow use of deprecated config keys
 // observer_type will override timer_type
 func (m *MetricMapping) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// MetricMappingAlias 是为了让 tmp 的 unmarshal 函数不执行 MetricMapping.UnmarshalYAML
+	// 避免递归死循环
 	type MetricMappingAlias MetricMapping
 	var tmp MetricMappingAlias
 	if err := unmarshal(&tmp); err != nil {

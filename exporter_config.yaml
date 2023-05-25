@@ -1,0 +1,36 @@
+defaults:
+  match_type: glob
+  glob_disable_ordering: false
+  ttl: 5m #
+
+mappings:
+- match: "dae.*.web.*.req_time"
+  #stats.timers.dae.frodo.web.*.req_time
+  name: "dae_app_request_latencies"
+  match_metric_type: observer
+  timer_type: histogram
+  histogram_options:
+    buckets: [.01, .025, .05, .1, .25, .5, 1, 2.5]
+  labels:
+      app: "$1"
+      role: "web"
+      task: "$2"
+
+- match: "dae.*.service.*.*.*.req_time"
+  #stats.timers.dae.doulist.service.DoulistService.DoulistService.count_by_item.req_time
+  name: "dae_app_request_latencies"
+  match_metric_type: timer
+  timer_type: histogram
+  buckets: [.005, .01, .025, .05, .1, .25, .5, 1, 2.5]
+  labels:
+    app: "$1"
+    role: "service"
+    task: "$2"
+    itf: "$4"
+    service_type: "thrift"
+
+# Any metric not matched will be dropped because "." matches all metrics.
+- match: "."
+  match_type: regex
+  action: drop
+  name: "dropped"

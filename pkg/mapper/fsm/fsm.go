@@ -143,7 +143,7 @@ func (f *FSM) GetMapping(statsdMetric string, statsdMetricType string) (*mapping
 	finalCaptures := make([]string, len(matchFields))
 	// keep track of captured group so we don't need to do append() on captures
 	captureIdx := 0
-	filedsCount := len(matchFields)
+	fieldsCount := len(matchFields)
 	i := 0
 	var state *mappingState
 	for { // the loop for backtracking
@@ -155,7 +155,7 @@ func (f *FSM) GetMapping(statsdMetric string, statsdMetricType string) (*mapping
 				if len(currentState.transitions) > 0 {
 					field := matchFields[i]
 					state, present = currentState.transitions[field]
-					fieldsLeft := filedsCount - i - 1
+					fieldsLeft := fieldsCount - i - 1
 					// also compare length upfront to avoid unnecessary loop or backtrack
 					if !present || fieldsLeft > state.maxRemainingLength || fieldsLeft < state.minRemainingLength {
 						state, present = currentState.transitions["*"]
@@ -189,7 +189,7 @@ func (f *FSM) GetMapping(statsdMetric string, statsdMetricType string) (*mapping
 			} // backtrack will resume from here
 
 			// do we reach a final state?
-			if state.Result != nil && i == filedsCount-1 {
+			if state.Result != nil && i == fieldsCount-1 {
 				if f.OrderingDisabled {
 					finalState = state
 					return finalState, captures
@@ -203,7 +203,7 @@ func (f *FSM) GetMapping(statsdMetric string, statsdMetricType string) (*mapping
 			}
 
 			i++
-			if i >= filedsCount {
+			if i >= fieldsCount {
 				break
 			}
 
